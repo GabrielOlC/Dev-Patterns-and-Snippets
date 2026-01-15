@@ -31,5 +31,5 @@ It is important to note that this is a Living Doc and Standards and name convent
 |   
 │
 └── /Templates
-    └── Error_Handler_Pattern.bas  # Standardized error trapping block
+    └── Snippets      
 ```
