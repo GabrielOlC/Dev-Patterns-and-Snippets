@@ -1,20 +1,22 @@
-### ZIP Batch Extractor
+/* -------------------------------------------------------------------------
+   Source: ERPM NF-XML reader, updated at Ampara Data Project
+   Function: fnExtractFromZIP
+   Purpose: Extracts and decompresses files from ALL .zip archives in a folder 
+            using native Power Query binary logic (No external tools required).
+   Context: Bypasses the need for Python/Shell scripts when processing 
+            large amount of files compressed into zip to allowing easy upload.
 
-> Purpose: Extracts and decompresses files from ALL .zip archives in a folder using native Power Query binary logic (No external tools required).
-> 
-> Source: ERPM NF-XML reader, updated at Ampara Data Project
-> 
-> Context: Bypasses the need for Python/Shell scripts when processing large amount of files compressed into zip to allowing easy upload.
+   Attribution:
 
-```powerquery
-/* Call: fnExtractFromZIP 
-   ---------------------- */
+- Logic adapted from: Mark White (sql10.blogspot.com -> Reading Zip files in PowerQuery / M)
+- Refactor: Wrapped raw binary logic into a Folder Iterator to handle 
+  batch processing of multiple ZIPs simultaneously, and improved usage interface.
+  ------------------------------------------------------------------------- */
 
 (bvFolderPath as text) =>
 let
     vFolderPath = Folder.Files(bvFolderPath),
     vZipFiles = Table.SelectRows(vFolderPath, each Text.Lower([Extension]) = ".zip"),
-
     // --- Internal Binary Decoder ---
     fnExtractFromZip = (bvZIPFile as binary) =>
     let
@@ -59,12 +61,6 @@ let
     vExtractedData = Table.AddColumn(vZipFiles, "ExtractedData", each try fnExtractFromZip([Content]) otherwise null),
     vCleanColumns = Table.SelectColumns(vExtractedData,{"ExtractedData"}),
     vTable = Table.ExpandTableColumn(vCleanColumns, "ExtractedData", {"FileName", "Content"}, {"Name", "Content"})
+
 in
     vTable
-```
-
-#### Attribution
-
-- Logic adapted from: Mark White (sql10.blogspot.com -> Reading Zip files in PowerQuery / M)
-- Refactor: Wrapped raw binary logic into a Folder Iterator to handle 
-  batch processing of multiple ZIPs simultaneously, and improved usage interface.

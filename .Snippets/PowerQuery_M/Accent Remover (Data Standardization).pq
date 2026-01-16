@@ -1,12 +1,9 @@
-### Accent Remover (Data Standardization)
-
-> Purpose: Replaces accented characters (Latin-1) with their ASCII equivalents.
-> 
-> Context: Critical for standardizing names/addresses before performing Database Merges or ID generation.
-
-```powerquery
-/* Call: fnRemoveAccents
-   --------------------- */
+/* -------------------------------------------------------------------------
+   Function: fnRemoveAccents
+   Purpose: Replaces accented characters (Latin-1) with their ASCII equivalents.
+   Context: Critical for standardizing names/addresses before performing Database
+            Merges or ID generation.
+   ------------------------------------------------------------------------- */
 
 (fnText as nullable text) as text =>
 let
@@ -28,4 +25,3 @@ let
     result = List.Accumulate(vPairs, vTtxt , (state, pair) => Text.Replace(state, pair{0}, pair{1}))
 in
     result
-```

@@ -1,14 +1,12 @@
-### Text Scraper
-
-> Purpose: Robustly extracts text occurring between two delimiters from a list of candidate columns (also works with 1).
-> 
-> Source: Loggi Email Parser Tool
-> 
-> Context: Used to parse unstructured .EML (email) bodies where the target data (e.g., "Fechamento R$ xxx") might shift between columns due to inconsistent email formatting.
-
-```powerquery
-/* Call: fnExtractWithin
-   ---------------------- */
+/* -------------------------------------------------------------------------
+   Source: Loggi Email Parser Tool
+   Function: fnExtractBetween
+   Purpose: Robustly extracts text occurring between two delimiters from a 
+            list of candidate columns (also works with 1).
+   Context: Used to parse unstructured .EML (email) bodies where the target 
+            data (e.g., "Fechamento R$ 500.00") might shift between columns 
+            due to inconsistent email formatting.
+   ------------------------------------------------------------------------- */
 
 (row as record, cols as list, startDelim as text, endDelim as text) as nullable text =>
 let
@@ -29,12 +27,13 @@ in
 
 /* -------------
    Usage Example
+
    ------------- 
+
 #"Total dos serviços" = Table.AddColumn(
     SourceTable,
     "Total dos serviços",
-    each try fnExtractWithin(_, {"Column305", "Column306", "ColumnN..."}, "Fechamento R$ ", " +<br>") otherwise null,
+    each try fnExtractBetween(_, {"Column305", "Column306", "ColumnN..."}, "Fechamento R$ ", " +<br>") otherwise null,
     type text
 )
 */
-```
