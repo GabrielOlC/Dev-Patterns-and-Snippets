@@ -30,6 +30,7 @@ This repository defines a strict **Notation** tailored for multi-language data p
 * `wb` → **Connection:** Variables of type `ADODB.Connection` (Database connectivity).
 * `cn` → **Cell Name:** Named ranges referencing specific cells. **e.g.:**`cnTaxRate`, `cnFilePath`
 * `vf` → **Functions:** Procedures that return a value by given an argument **e.g.:**`vfGetLastRow`, `vfCalculateTax`
+* `m`→ **Measures**: Measures returning a value. **e.g.:** `mAnimalCount`
   
   
 
@@ -72,6 +73,7 @@ This repository defines a strict **Notation** tailored for multi-language data p
     **Structure:** [`SheetInitials` all in CAPS] + [First letters of `Name` in CAPS].
 
 * `tb[SheetInitials][Name]` → **Tables:** Structured Excel Tables. **e.g.:** `tbSDDash` (Sheet: **S**ummed **D**ata, Table: **DASH**).
+* `ptb[SheetInitials][Name]` → **PivotTables:** Structured Excel Pivot tables. **e.g.:** `ptbSDDash` (Sheet: **S**ummed **D**ata, Table: **DASH**)
 * `obj[SheetInitials][Name]` → **Objects:** Shapes, buttons, or form controls. **e.g.:** `objMMButton` (Sheet: **M**ain **M**enu, Object: **BUTTON**).
 
 ### 🔹Named Ranges & Variables
@@ -98,3 +100,7 @@ This repository defines a strict **Notation** tailored for multi-language data p
 ### 🔹Functions
 
 * `fn` → **M Functions:** Custom Power Query functions. **e.g.:** `fnUnzipXML`, `fnParseDate`.
+
+### 🔹Functions
+
+* `m`→ **Measures**: Measures returning a value. **e.g.:** `mAnimalCount`
