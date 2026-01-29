@@ -15,8 +15,10 @@
 
 (bvFolderPath as text) =>
 let
+   //bvFolderPath = CaminhoParaArquivosZIP, //for testing
     vFolderPath = Folder.Files(bvFolderPath),
     vZipFiles = Table.SelectRows(vFolderPath, each Text.Lower([Extension]) = ".zip"),
+	
     // --- Internal Binary Decoder ---
     fnExtractFromZip = (bvZIPFile as binary) =>
     let
@@ -59,8 +61,10 @@ let
 
     // Execute Extraction across all found ZIPs
     vExtractedData = Table.AddColumn(vZipFiles, "ExtractedData", each try fnExtractFromZip([Content]) otherwise null),
-    vCleanColumns = Table.SelectColumns(vExtractedData,{"ExtractedData"}),
-    vTable = Table.ExpandTableColumn(vCleanColumns, "ExtractedData", {"FileName", "Content"}, {"Name", "Content"})
-
+    vCleanColumns = Table.SelectColumns(vExtractedData,{"ExtractedData", "Name"}),
+	#"Renamed Columns" = Table.RenameColumns(vCleanColumns,{{"Name", "SourceZip.Name"}}),
+    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns",{"SourceZip.Name", "ExtractedData"}),
+    vTable = Table.ExpandTableColumn(#"Reordered Columns", "ExtractedData", {"FileName", "Content"}, {"Name", "Content"})
+	
 in
     vTable
