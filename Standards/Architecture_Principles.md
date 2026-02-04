@@ -11,22 +11,22 @@
 ```markup-templating
 /VBA_Project_Structure Example
 │
-├── /Microsoft Excel Objects (vb_)
+├── /Microsoft Excel Objects (vb_) # Event listeners and triggers
 │   ├── vbDashboard       # Event Listeners Only
 │   └── vbDataInput       # UI Triggers
 │
-├── /Controllers-WorksheetFunctions (wf_)
+├── /Controllers-WorksheetFunctions (wf_)  # Event controllers (logic)
 │   ├── wf_Dashboard      # Traffic Control for Dashboard
 │   └── wf_DataValidation # Input Rules & Routing
 │
-├── /Services-CrossModules (cm_ & cl)
+├── /Services-CrossModules (cm_ & cl) # Reusable code
 │   ├── cm_Calculations   # Pure Math Logic
 │   ├── cm_Database       # ADODB Connection & SQL
 │   ├── cm_Files          # FileSystemObject Logic
 |   ├── clRange           # Class with range references
 |   └── clString          # Class with name references
 │
-└── /Core (sys_)
+└── /Core (sys_) # Global setups
     ├── sys_ErrorHandler  # Centralized Logging
     └── sys_Config        # Global Constants
 ```
