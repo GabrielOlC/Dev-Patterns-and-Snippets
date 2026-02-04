@@ -11,6 +11,7 @@
 ```markup-templating
 /VBA_Project_Structure Example
 │
+<<<<<<< Updated upstream
 ├── /Microsoft Excel Objects (vb_) # Event listeners and triggers
 │   ├── vbDashboard       # Event Listeners Only
 │   └── vbDataInput       # UI Triggers
@@ -20,6 +21,17 @@
 │   └── wf_DataValidation # Input Rules & Routing
 │
 ├── /Services-CrossModules (cm_ & cl) # Reusable code
+=======
+├── /Microsoft Excel Objects (sheets) # Event listeners and triggers
+│   ├── vbDashboard       # Event Listeners Only
+│   └── vbDataInput       # UI Triggers
+│
+├── /Controllers-WorksheetFunctions (wf_) # Event controllers (logic)
+│   ├── wf_Dashboard      # Traffic Control for Dashboard
+│   └── wf_DataValidation # Input Rules & Routing
+│
+├── /Services-CrossModules (cm_) # Reusable code
+>>>>>>> Stashed changes
 │   ├── cm_Calculations   # Pure Math Logic
 │   ├── cm_Database       # ADODB Connection & SQL
 │   ├── cm_Files          # FileSystemObject Logic
