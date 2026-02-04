@@ -26,13 +26,14 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 * `v` → **Variable(Standard):** Basic data types like Integer, String, Boolean. **e.g.:**`vRowCount`, `vUserName`
 * `s` → **Set (Objects):** Object variables that require the `Set` keyword. **e.g.:**`sFileDialog`, `sRange`
+* `c`  → **Constant:** Canstant variable. **e.g.:** `ctbID` 
 * `rs` → **Recordset:** Variables of type `ADODB.Recordset`.
 * `wb` → **Connection:** Variables of type `ADODB.Connection` (Database connectivity).
 * `cn` → **Cell Name:** Named ranges referencing specific cells. **e.g.:**`cnTaxRate`, `cnFilePath`
 * `vf` → **Functions:** Procedures that return a value by given an argument **e.g.:**`vfGetLastRow`, `vfCalculateTax`
 * `m`→ **Measures**: Measures returning a value. **e.g.:** `mAnimalCount`
-  
-  
+* `ar` → **Array:** Variable with multiple values. **e.g.:** `arItems`, `arPrices`
+* `dt` → **Dictionary:** Key-value pair collection. **e.g.:** `dtConfig`, `dtUserData`
 
 ## VBA Specifics
 
@@ -59,8 +60,11 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 * `v` → **Dim Variable(Standard):** Basic data types like Integer, String, Boolean. **e.g.:**`vRowCount`, `vUserName`
 * `s` → **Set (Objects):** Object variables that require the `Set` keyword. **e.g.:**`sFileDialog`, `sRange`
+* `c` → **Constant:** Canstant variable. **e.g.:** `ctbID`
 * `rs` → **Recordset:** Variables of type `ADODB.Recordset`
 * `wb` → **Connection:** Variables of type `ADODB.Connection` (Database connectivity).
+* `ar` → **Array:** Variable with multiple values. **e.g.:**  `arItems`, `arPrices`
+* `dt` → **Dictionary:** Key-value pair collection. **e.g.:** `dtConfig`, `dtUserData`
 
 * * *
 
