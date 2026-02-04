@@ -19,10 +19,12 @@
 │   ├── wf_Dashboard      # Traffic Control for Dashboard
 │   └── wf_DataValidation # Input Rules & Routing
 │
-├── /Services-CrossModules (cm_)
+├── /Services-CrossModules (cm_ & cl)
 │   ├── cm_Calculations   # Pure Math Logic
 │   ├── cm_Database       # ADODB Connection & SQL
-│   └── cm_Files          # FileSystemObject Logic
+│   ├── cm_Files          # FileSystemObject Logic
+|   ├── clRange           # Class with range references
+|   └── clString          # Class with name references
 │
 └── /Core (sys_)
     ├── sys_ErrorHandler  # Centralized Logging
