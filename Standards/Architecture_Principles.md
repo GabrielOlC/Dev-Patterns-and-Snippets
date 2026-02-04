@@ -11,7 +11,7 @@
 ```markup-templating
 /VBA_Project_Structure Example
 │
-├── /Microsoft Excel Objects (sheets)
+├── /Microsoft Excel Objects (vb_)
 │   ├── vbDashboard       # Event Listeners Only
 │   └── vbDataInput       # UI Triggers
 │
