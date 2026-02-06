@@ -39,7 +39,7 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 **My VBA architecture follows Object Calisthenics principles: Sheet modules handle triggers, while logic is encapsulated in distinct "WorksheetFunctions" or "CrossModules". Refer to `Architecture_Principles.md`**
 
-### 🔹Modules & Procedures
+### 🔹Components & Constructs
 
 * `vb` → **Sheet Modules:** Representing the code behind a specific worksheet. **e.g.:**`vbDashboard`, `vbDataInput`
 
@@ -51,12 +51,16 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 * `mcl` → **Module Class Variable:** Private variables defined within a Class module. **e.g.:**`Private mclID as String`
 
+* `bt_`→**Buttons:** Subs or Functions that are triggered by a worksheet button. **e.g.:**`bt_vsUpdateAllTokens()`
+
+* `fm`→ **User Forms:** Custom dialog windows. **e.g.:** `fmTransferTokens`
+
 ### 🔹Arguments & Parameters
 
 * `bv` → **ByValue:** Arguments passed by value; changes inside the function do **not** affect the original variable. **e.g.:**`Sub vsProcessData(bvInputValue As String)`
 * `bf` → **ByRef:** Arguments passed by reference; changes inside the function **do** affect the original variable. **e.g.:**`Function vfUpdateCount(bfCounter As Integer)`
 
-### 🔹Variables (Dim & Set)
+### 🔹Variables
 
 * `v` → **Dim Variable(Standard):** Basic data types like Integer, String, Boolean. **e.g.:**`vRowCount`, `vUserName`
 * `s` → **Set (Objects):** Object variables that require the `Set` keyword. **e.g.:**`sFileDialog`, `sRange`
