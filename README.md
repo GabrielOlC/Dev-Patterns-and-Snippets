@@ -1,6 +1,6 @@
 # Dev-Patterns-and-Snippets
 
-**A centralized repository for Standards, Naming Conventions, and Reusable Code Snippets used across my development projects.**
+**A centralized library establishing strict naming conventions, architectural principles (Object Calisthenics), and reusable code snippets (e.g., VBA, M, Python). It ensures that every project I build is modular, maintainable, and scalable from Day 1.**
 
 ---
 
