@@ -4,7 +4,7 @@
 > 
 > Source: Calculadora de Precificação Sacos para Lixo (CPSL)
 > 
-> Contex: Used to retrieve specific material specifications and cost from 
+> Context: Used to retrieve specific material specifications and cost from 
 >            a single table interface.
 
 ```excel-formula
@@ -19,7 +19,7 @@
   XLOOKUP([@Litragem], tbSDimentionBags[Litragem], tbSDimentionBags[Sup_Row]),
   XLOOKUP([@Material], tbSDimentionBags[#Headers], tbSDimentionBags[#Totals])
 )
-   → Returns the intersecting value for the given row (Litragem ) and column (Material) 
+   → Returns the intersecting value for the given row (Litragem ) and column (Material)     
 ```
 
 #### Helper formulas for row/column indices
@@ -31,8 +31,6 @@
   ```
   
   → Generates sequential row numbers within the table
-  
-  
 - Column Index equation. Place this in the total's row:
   
   ```excel-formula
@@ -46,5 +44,3 @@
 #### Future Improvements:
 
 - [ ] Eliminate the need for the Index by `xmatch` the whole table for the headers values, and return its relative position.
-
-
