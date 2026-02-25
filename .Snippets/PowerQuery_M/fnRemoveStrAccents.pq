@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------
-   Function: fnRemoveAccents
+   Function: fnRemoveStrAccents.
    Purpose: Replaces accented characters (Latin-1) with their ASCII equivalents.
    Context: Critical for standardizing names/addresses before performing Database
             Merges or ID generation.

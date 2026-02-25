@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------
-   Function: fnNormalizeSpaces
+   Function: fnNormalizeTblSpaces
    Purpose: Sanitizes text by removing leading/trailing whitespace and 
             replacing multiple internal spaces with a single space.
    Context: Essential for "Fuzzy Matching" preparation when joining datasets 

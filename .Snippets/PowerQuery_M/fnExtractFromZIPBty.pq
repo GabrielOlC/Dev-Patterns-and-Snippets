@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Source: ERPM NF-XML reader, updated at Ampara Data Project
-   Function: fnExtractFromZIP
+   Function: fnExtractFromZIPByt
    Purpose: Extracts and decompresses files from ALL .zip archives in a folder 
             using native Power Query binary logic (No external tools required).
    Context: Bypasses the need for Python/Shell scripts when processing 
@@ -68,3 +68,7 @@ let
 	
 in
     vTable
+
+/*Usage case
+    Navigation1 = fnExtractFromZIPx(CaminhoParaArquivosZIP){0}[Content]
+*/

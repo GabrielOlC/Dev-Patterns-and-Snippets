@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Source: Loggi Email Parser Tool
-   Function: fnExtractBetween
+   Function: fnExtractBetweenStr
    Purpose: Robustly extracts text occurring between two delimiters from a 
             list of candidate columns (also works with 1).
    Context: Used to parse unstructured .EML (email) bodies where the target 
@@ -33,7 +33,7 @@ in
 #"Total dos serviços" = Table.AddColumn(
     SourceTable,
     "Total dos serviços",
-    each try fnExtractBetween(_, {"Column305", "Column306", "ColumnN..."}, "Fechamento R$ ", " +<br>") otherwise null,
+    each try fnExtractBetweenStr(_, {"Column305", "Column306", "ColumnN..."}, "Fechamento R$ ", " +<br>") otherwise null,
     type text
 )
 */
