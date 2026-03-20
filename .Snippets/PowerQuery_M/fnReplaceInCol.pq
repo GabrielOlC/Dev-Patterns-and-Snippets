@@ -46,7 +46,7 @@
                 let 
                     vReplacingVals = List.Accumulate(
                         bvReplaceWith,
-                        if bvText = null then "" else Text.Lower(bvText),
+                        if bvText = null then "" else Text.Trim(Text.Lower(bvText)),
                         (lmTxt, lmReplaceWith) =>
                             // Check if replacement is special (maybe one day change to a choose a type of replacement through picking a numb as it is on excel)
                             if List.Count(lmReplaceWith) = 3 then
@@ -68,11 +68,11 @@
                                             
                                     // whole-cell match: replace only when the entire trimmed cell equals the find value		
                                     else if vMode = "1" or vMode = "bycell" then
-                                        if Text.Trim(lmTxt) = vFind then vReplace else lmTxt
+                                        if lmTxt = vFind then vReplace else lmTxt
                                     
                                     // length match
                                     else if vMode = "2" or vMode = "bylen<" then
-                                        if Text.Length(Text.Trim(lmTxt)) < Number.FromText(vFind) then vReplace else lmTxt
+                                        if Text.Length(lmTxt) < Number.FromText(vFind) then vReplace else lmTxt
 
                                     // fallback: Do nothing
                                     else
