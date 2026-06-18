@@ -30,6 +30,10 @@
             mode = 2 | "byLen<"
                 Compare the cell len against FindVal. 
                 Replacement happens only when cell len is smaller or equal to Findval.
+                
+            mode = 3 | "byContains"
+                Compare the cell against FindVal.
+                If the cell contains FindVal anywhere, replace the WHOLE cell with ReplaceVal.
 
     Examples:
         { {"ColName1", { {"byWord","rd","road"} }}, 
@@ -42,7 +46,7 @@
     (bvTable as table, bvColumnReplaceValList as list) as table =>
         let
             //Set the inner list behaviour { {"FindVal","ReplaceVal"}, {"FindVal.","ReplaceVal"} }}
-            fnReplaceVals = (bvText as text, bvReplaceWith as list) =>
+            fnReplaceVals = (bvText as nullable text, bvReplaceWith as list) =>
                 let 
                     vReplacingVals = List.Accumulate(
                         bvReplaceWith,
@@ -73,6 +77,10 @@
                                     // length match
                                     else if vMode = "2" or vMode = "bylen<" then
                                         if Text.Length(lmTxt) < Number.FromText(vFind) then vReplace else lmTxt
+                                    
+                                    // contains match: if the cell contains the find value anywhere, replace the WHOLE cell
+                                    else if vMode = "3" or vMode = "byContains" then
+                                        if Text.Contains(lmTxt, vFind) then vReplace else lmTxt
 
                                     // fallback: Do nothing
                                     else
