@@ -109,6 +109,8 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 * `fn` → **M Functions:** Custom Power Query functions. **e.g.:** `fnUnzipXML`, `fnParseDate`.
 
-### 🔹Functions
+### 🔹Measures
 
 * `m`→ **Measures**: Measures returning a value. **e.g.:** `mAnimalCount`
+
+
