@@ -8,6 +8,10 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 ## Universal Prefixes
 
+> Note: Prefix that may overlap another prefix receive `_`. **e.g.,** `qr_tbSDDash`. `tb` comes from the excel table, which means this is a workbook table query load.
+
+### Primary
+
 >  **These prefixes apply across all languages (Excel, VBA, SQL, M) to denote data relationships and system configurations.**
 
 * `sys_` → **System Variables:** Configuration settings defined globally (e.g., `sys_cnFilePath`, `sys_DateLimit`). **Use situation:** Using a dynamic in‑book cell to set a VBA header name/range. A normal cell name would be `cnCellName`, but since this cell is a static reference in code used to dynamically set the header ranges, it is called `sys_cnCellName`.
@@ -16,11 +20,11 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 * `aux_` or `_` or `.` → **Auxiliary Elements:** Helper tables, temporary calculations, or intermediate staging data (e.g., `_tbCalculation`, `.MidCalc`, `aux_FilterCol`). **Use situation:** Python’s personalized functions may use `_`, Notion’s user‑visible properties may use `.`, and Excel formulas may use `aux_`.
   
-  * **Note:** This convention was, for a long time, referred to as `sup`, `sub`.
+  * **Note:** This convention was, for a long time, referred to as `sup`, `sub` (legacy).
 
 * * *
 
-## Universal suffix
+### Default
 
 > **This is a summary of every code language variable**
 
@@ -30,7 +34,7 @@ This repository defines a strict **Notation** tailored for multi-language data p
 * `rs` → **Recordset:** Variables of type `ADODB.Recordset`.
 * `wb` → **Connection:** Variables of type `ADODB.Connection` (Database connectivity).
 * `cn` → **Cell Name:** Named ranges referencing specific cells. **e.g.:**`cnTaxRate`, `cnFilePath`
-* `vf` → **Functions:** Procedures that return a value by given an argument **e.g.:**`vfGetLastRow`, `vfCalculateTax`
+* `fn` → **Functions:** Procedures that return a value by given an argument **e.g.:**`fnGetLastRow`, `fnCalculateTax`
 * `m`→ **Measures**: Measures returning a value. **e.g.:** `mAnimalCount`
 * `ar` → **Array:** Variable with multiple values. **e.g.:** `arItems`, `arPrices`
 * `dt` → **Dictionary:** Key-value pair collection. **e.g.:** `dtConfig`, `dtUserData`
@@ -43,7 +47,9 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 * `vb` → **Sheet Modules:** Representing the code behind a specific worksheet. **e.g.:**`vbDashboard`, `vbDataInput`
 
-* `vf` → **VBA Functions:** Procedures that return a value. **e.g.:**`vfGetLastRow`, `vfCalculateTax`
+* `fn` → **VBA Functions:** Procedures that return a value. **e.g.:**`fnGetLastRow`, `fnCalculateTax`
+  
+  * (legacy) fn in VBA used to be called vf
 
 * `vs` → **VBA Sub:** Procedures that perform an action without returning a value. **e.g.:**`vsExportPDF`, `vsClearInputs`
 
@@ -103,7 +109,7 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 ### 🔹Queries
 
-* `qr_` → **Query Tables:** Final output queries loaded to the grid or data model. **e.g.:** `qr_SalesData`, `qr_DimProducts`.
+* `qr_` → **Query Tables:** Final output queries loaded to the grid or data model. **e.g.:** `qr_tbSDDash`, `qr_Products`.
 
 ### 🔹Functions
 
@@ -113,4 +119,36 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 * `m`→ **Measures**: Measures returning a value. **e.g.:** `mAnimalCount`
 
+---
 
+## SQL & Database
+
+**Standards for relational objects.**
+
+### 🔹Objects
+
+* `tb` → **Tables:** Base tables holding records. **e.g.:** `tbOngs`, `tbLocalContacts`, `tbSends`(two names are prefered but not required)
+
+* `vw` → **Views:** Stored `SELECT` behaving as a read-only table. **e.g.:** `vwOngsActive`
+
+* `vwm` → **Materialized Views:** Views stored on disk, refreshed on command. **Use situation:** Only once an aggregation is measurably slow and stale data is acceptable. **e.g.:** `vwmCampaignPerformance`
+
+* `ix_[Table][Columns]` → **Indexes:** Planner lookup structures, never referenced in a query.  **e.g.:** `ix_tbOngsMails`, `ix_tbContactsMails`
+
+* `fn` → **SQL Functions:** Routines returning a value, including trigger bodies and RPC targets. **e.g.:** `fnSetUpdatedAt`
+
+* `trg_[Table][Action]` → **Triggers:** Code fired by an insert, update or delete. Holds no logic; executes an `fn`. **e.g.:** `trg_tbOngsSetUpdated`
+
+* `pol_[Table][Action][Who]` → **Policies:** Such as Row Level Security rules. **e.g.:** `pol_tbOngsSelectAuth`
+  
+  ### 🔹Columns
+
+* `FK_[TableInitials]` → **Foreign Key:** Universal prefix, underscore and caps intact. **e.g.:** `FK_ocOngID`, `FK_tnCampaignID`
+
+* Normal columns are plain PascalCase nouns, acronyms in caps. **e.g.:** `Name`, `CNPJ`, `IsActive`
+  
+  ### 🔹Queries
+
+* `[TableInitials]` → **Alias:** The initials declared per statement. **e.g.:** `from "tbONgs" as o`, `from "tbLocalContacts as lc`
+
+* `v` → **CTE:** Named intermediate result; the SQL `LET`. Statement-local, so unquoted. **e.g.:** `with vOpened as (...)`
