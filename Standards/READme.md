@@ -16,7 +16,7 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 * `sys_` → **System Variables:** Configuration settings defined globally (e.g., `sys_cnFilePath`, `sys_DateLimit`). **Use situation:** Using a dynamic in‑book cell to set a VBA header name/range. A normal cell name would be `cnCellName`, but since this cell is a static reference in code used to dynamically set the header ranges, it is called `sys_cnCellName`.
 
-* `FK_` → **Foreign Keys:** Explicitly marking relational data IDs in tables or SQL queries (e.g., `FK_CustomerID`, `FK_OrderID`).
+* `FK_` → **Foreign Keys:** Explicitly marking relational data IDs in tables or SQL queries (e.g., `FK_CustomerID`, `FK_OrderID`). Note: All lower in postgres
 
 * `aux_` or `_` or `.` → **Auxiliary Elements:** Helper tables, temporary calculations, or intermediate staging data (e.g., `_tbCalculation`, `.MidCalc`, `aux_FilterCol`). **Use situation:** Python’s personalized functions may use `_`, Notion’s user‑visible properties may use `.`, and Excel formulas may use `aux_`.
   
@@ -125,30 +125,28 @@ This repository defines a strict **Notation** tailored for multi-language data p
 
 **Standards for relational objects.**
 
+TODO: Need change all caps for _  as postgres doesn't like having those
+
 ### 🔹Objects
 
 * `tb` → **Tables:** Base tables holding records. **e.g.:** `tbOngs`, `tbLocalContacts`, `tbSends`(two names are prefered but not required)
-
 * `vw` → **Views:** Stored `SELECT` behaving as a read-only table. **e.g.:** `vwOngsActive`
-
 * `vwm` → **Materialized Views:** Views stored on disk, refreshed on command. **Use situation:** Only once an aggregation is measurably slow and stale data is acceptable. **e.g.:** `vwmCampaignPerformance`
-
 * `ix_[Table][Columns]` → **Indexes:** Planner lookup structures, never referenced in a query.  **e.g.:** `ix_tbOngsMails`, `ix_tbContactsMails`
-
 * `fn` → **SQL Functions:** Routines returning a value, including trigger bodies and RPC targets. **e.g.:** `fnSetUpdatedAt`
+* `trg_[Table][Action]` c**Triggers:** Code fired by an insert, update or delete. Holds no logic; executes an `fn`. **e.g.:** `trg_tbOngsSetUpdated`
+* `pol_[Table][Action][Who]` → **Policies:** Such as Row Level Security rules. **e.g.:** `pol_tbOngsSelectAuth` 
+* `tp_` → **Types:** Custom enums, composites, or user-defined base types that group specific static structures. **e.g.:** `tp_contact_channel`, `tp_roles`
+* `dm_` → **Domains:** Types with validations **e.g.:**`dm_cnpj`
 
-* `trg_[Table][Action]` → **Triggers:** Code fired by an insert, update or delete. Holds no logic; executes an `fn`. **e.g.:** `trg_tbOngsSetUpdated`
+### 🔹Columns
 
-* `pol_[Table][Action][Who]` → **Policies:** Such as Row Level Security rules. **e.g.:** `pol_tbOngsSelectAuth`
-  
-  ### 🔹Columns
+* `fk_[TableInitials]` → **Foreign Key:** Universal prefix, underscore and caps intact. **e.g.:** `fk_ocOngID`, `fk_tnCampaignID`
 
-* `FK_[TableInitials]` → **Foreign Key:** Universal prefix, underscore and caps intact. **e.g.:** `FK_ocOngID`, `FK_tnCampaignID`
-
-* Normal columns are plain PascalCase nouns, acronyms in caps. **e.g.:** `Name`, `CNPJ`, `IsActive`
+* Normal columns are plain lower cases with prefixed with `c`. **e.g.:** `Name`, `CNPJ`, `IsActive` 
   
   ### 🔹Queries
 
-* `[TableInitials]` → **Alias:** The initials declared per statement. **e.g.:** `from "tbONgs" as o`, `from "tbLocalContacts as lc`
+* `[TableInitials]` → **Alias:** The initials declared per statement. **e.g.:** `from "tbOngs" as o`, `from "tbLocalContacts as lc`
 
 * `v` → **CTE:** Named intermediate result; the SQL `LET`. Statement-local, so unquoted. **e.g.:** `with vOpened as (...)`
