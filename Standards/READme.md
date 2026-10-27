@@ -109,6 +109,7 @@ This repository defines a strict **Notation** tailored for multi-language projec
 
 - `cn` → **Cell Name:** Named ranges referencing specific cells (**e.g.:** `cnTaxRate`, `cnFilePath`).
 - **LET Rule:** Every equation inside a `LET` sits in a `v` variable; the last argument only returns a variable, at most wrapped in formatting, so each step can be tested on its own. **e.g.:** `=LET(vDueDate, complex equation, FORMAT(vDueDate,"yyyy-mm-dd"))`
+- `rem` → **Comment:** A comment inside a `LET` is a `rem` variable holding `N("…")`, since formulas have no comment syntax. **e.g.:** `rem, N("Tags to substitute")`
 
 ### 🔹LAMBDA Functions
 

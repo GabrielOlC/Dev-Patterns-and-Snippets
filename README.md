@@ -1,35 +1,38 @@
 # Dev-Patterns-and-Snippets
 
-**A centralized library establishing strict naming conventions, architectural principles (Object Calisthenics), and reusable code snippets (e.g., VBA, M, Python). It ensures that every project I build is modular, maintainable, and scalable from Day 1.**
+**A centralized library establishing my naming conventions, architectural principles and reusable code snippets (VBA, M, Excel, SQL, JavaScript, Python). It ensures that every project I build is modular, maintainable, and scalable from Day 1.**
 
 ---
 
 ## 🏗️ Philosophy
 
-> "Reliability and maintainability are not accidents; they are the result of rigorous standards!". 
+> "Reliability and maintainability are not accidents; they are the result of rigorous standards!"
 
-This repository documents my personal framework for ensuring consistency across my projects development. It enforces principles of **Object Calisthenics**, **Modularity**, and **Self-Documenting Code**. 
+This repository documents my personal framework for consistency across all my projects. It separates Interface, Logic and Data into clear layers (`wf_` controllers, `cm_` services, `sys_` core), applies **Object Calisthenics** and **Self-Documenting Code**, and builds every reusable piece once, so the next project starts from proven code instead of an empty module.
 
-It is important to note that this is a Living Doc and Standards and name conventions may change over time, as I go on learning. 
+It is important to note that this is a Living Doc: standards and naming conventions may change over time, as I keep learning from each project.
 
+## 🧰 The Toolkit
 
+Services that prove useful beyond one project live in `/.Snippets`, each opening with the header from `/Templates`. `service-catalog.md` lists every one of them in a line, so it's quick to check what already exists before writing something new.
 
 ## 📂 Repository Structure
 
 ```markup-templating
 /Dev-Patterns-and-Snippets
 │
-├── /Standards
-│   ├── Naming_Conventions.md      # Prefixes (sys_, FK_, vb, lmd...)
-│   └── Architecture_Principles.md # Modular Class design, Error Handling rules
+├── service-catalog.md             # One line per service in the toolkit
 │
-├── /.Snippets
+├── /Standards
+│   ├── Naming_Conventions.md      # Tokens and casing (sys_, bv_, fn, tb_, wf_/cm_ files...)
+│   └── Architecture_Principles.md # Layers, reuse, data integrity, error handling, documentation
+│
+├── /.Snippets                     # The toolkit: reusable services
 │   ├── /VBA                       # Reusable modules (Table select/resizing, Regex to RGB...)
 │   ├── /PowerQuery_M              # Data cleaning functions (Unzip, Parse XML...)
 │   ├── /Excel                     # Advanced formula logic (lmdNotEmptyOrZero...)
 │   └── /Python                    # Utility scripts (Scrapers, Parsers...)
-|   
 │
 └── /Templates
-    └── Snippets      
+    └── In code Snippets.md        # The header every service file opens with
 ```
