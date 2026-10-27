@@ -82,7 +82,7 @@ In many projects, logic is often buried inside Button Clicks or Worksheet Events
 Principles from *Object Calisthenics* are applied to enforce code hygiene and readability:
 
 1. **One Level of Indentation per Method:** Deeply nested `If/Loop` structures are refactored into smaller, distinct helper functions.
-2. **No "Magic Values":** Hardcoded values are prohibited. Numbers, strings, limits, timeouts, sizes, e-mail addresses, URLs, file paths, and similar configuration data must be defined in sys\_ and referenced through named constants. (**e.g.:** `sys_config.cRequestTimeoutMs`, `sys_config.cMaxPDFBytes`, `sys_config.cContactEmail`, `sys_config.cSupportURL`).
+2. **No "Magic Values":** Hardcoded values are prohibited. Numbers, strings, limits, timeouts, sizes, e-mail addresses, URLs, file paths, and similar configuration data must be defined in sys\_ and referenced through named constants. (**e.g.:** `sys_config.cRequestTimeoutMs`, `sys_config.cMaxPDFBytes`, `sys_config.cContactEmail`, `sys_config.cSupportURL`). Locations too: a column, table, range or element is reached through one named reference, never by its position; in VBA, a class can gather them (`clRange`). **e.g.:** `Excel.CurrentWorkbook(){[Name="tbDBTokens"]}[Content]`, `document.getElementById('fmCNPJ')`
 3. **Explicit Declaration:** Each client names its own configuration instead of having it inferred from a file path or position. **e.g.:** In the page:`<html data-page="cadastro-afiliado">` in the sys\_ `sys_config.dtPages = { 'cadastro-afiliado': { cDevMode: false } }`
 4. **Self-Documenting Code:** Variable names must be descriptive (`vRowCount` vs `r`); short loops follow the loop-counter rule in the Naming Conventions. A comment is added only where the code cannot say it, and then it gives the reason in a line or two.
 5. **Lists over Booleans:** Membership is expressed as a list, so changing it means adding or removing a name rather than flipping flags. **e.g.:** `arRequiredFields`, `vAcceptsFiles`
@@ -115,7 +115,7 @@ Errors are managed through a dual strategy of **Prevention** and **Graceful Fail
 ### 🔹 Centralized Handling
 
 - **Check at the edge:** A service checks what it receives from outside its control (a plugin's result, an API response, a user's file) before using it, and stops with an error that names what is wrong. **e.g.:** `_vsValidateResult` raises a `ValueError` naming the missing field.
-- **One handler per entry point:** Every entry point (a button procedure, a page controller, a script's `fnMain`) catches errors in one place, logs them, and shows a message the person can act on. **e.g.:** `vsLogAndAlert` in VBA.
+- **One handler per entry point:** Every entry point (a button procedure, a page controller, a script's `fnMain`) catches errors in one place, logs them, shows a message the person can act on, and puts back whatever it switched off, even when it fails. **e.g.:** `vsLogAndAlert` in VBA, with events and screen updating restored under `ExitSub:`.
 - **Logging:** Exceptions are not merely displayed; they are logged (timestamp, user, error description) to a secure log sheet or database for auditing purposes.
 - **Exit codes:** A script returns `0` when everything passed, `1` when a check failed and `2` for wrong input.
 
