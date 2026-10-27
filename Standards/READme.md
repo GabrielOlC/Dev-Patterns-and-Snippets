@@ -22,7 +22,7 @@ This repository defines a strict **Notation** tailored for multi-language projec
 - **Second instance:** The same thing, repeated, takes a number instead of a synonym; a different thing gets its own name. **e.g.:** two personal phones are `fmRespWhatsApp` and `fmRespWhatsApp2`; the institutional one is `fmWhatsAppInstitucional`.
 - **Same fact, same name:** The original caller is preferable. When a value is stored again, to shorten a long caller or avoid repeating heavy work, it keeps its descriptive part, so one search finds both. A new name is only for a new fact. `sys_` is never stored again. **e.g.:** `vFormsPath = sURL.pathname` keeps *Path*, the same fact; `dtRoute = dtRoutes[vFormsPath]` keeps *Route*, one item of the same collection; `vIsDebug = cDebugMode && !vIsProduction` derives a new fact, so it gets a new name.
 - **Native names:** Names set by the language or by an API stay as they are. **e.g.:** `self`, `__init__`, `sURL.pathname`
-- **Loop counters:** Short loops, comprehensions and lambdas may use `z`, `x`, `c` and `v`; nested ones combine them (`zz`, `zx`, `zc`…). Anything longer gets a descriptive name. **e.g.:** `for z in arWaves`
+- **Loop counters:** A numeric counter in a short loop uses `z`, `x`, `c` or `v`; nested loops combine them (`zz`, `zx`, …). A loop over items names the item, with its token. **e.g.:** `For z = 1 To 10`, `For Each sCell In sRange`, `for vName in arNames`
 
 ### Values
 
@@ -59,12 +59,12 @@ This repository defines a strict **Notation** tailored for multi-language projec
 - `v` → **Variable (Standard):** Basic values like integers, strings and booleans; also a `LET` variable, an M step or a SQL CTE. **e.g.:** `vRowCount`, `vUserName`
 - `s` → **Object References:** Any object, including one made from a class; in VBA, an object assigned with `Set`; in JavaScript, DOM elements too. **e.g.:** `sRange`, `sBtnSubmit`, `sCustomer = clCustomer()`
 - `c` → **Constant:** A single setting or limit, fixed on purpose. The one token that never stacks: a fixed dictionary or list keeps its own token. **e.g.:** `cMaxPDFBytes`, `cDebugMode`, but `dtRoutes`
-- `ar` → **Array:** Variable with multiple values. **e.g.:** `arItems`, `arPrices`
-- `dt` → **Dictionary:** Key-value pair collection; in JavaScript, also any plain object used as a record or a lookup table. A property read like a variable takes its token; a key looked up as data takes none and follows *Values*. **e.g.:** `dtRoutes`, `sys_config.dtPages['cadastro-afiliado'].cDevMode`
-- `fn` → **Functions:** Procedures that return a value. A variable that holds a function takes `fn`, by what the function does. **e.g.:** `fnGetLastRow`, `fnIsValidCPF`, `for (const fnCheck of [fnIsValidCPF, fnIsValidCNPJ])` *(legacy: `vf`)*
-- `vs` → **Subs:** Procedures that perform an action without returning a value. **e.g.:** `vsExportPDF`, `vsRenderMessage`
+- `ar` → **Array:** A collection of values without keys: a list, tuple, set, or the language's array. **e.g.:** `arItems`, `arPrices`, `arQueue = deque([bv_vStart])`
+- `dt` → **Dictionary:** Key-value pair collection; in JavaScript, also any plain object used as a record or a lookup table. A key the code names as part of the structure (read with a dot) takes its token; a key that is data (looked up by value) takes none and follows *Values*. **e.g.:** `sys_config.dtPages['cadastro-afiliado'].cDevMode`; `dtCopy[vStatus]`, where `dtCopy = { ok: '…', already_affiliated: '…' }`
+- `fn` → **Functions:** Procedures that return a value. A variable that holds a function takes `fn`. **e.g.:** `fnGetLastRow`, `fnIsValidCPF`, `for (const fnCheck of [fnIsValidCPF, fnIsValidCNPJ])` *(legacy: `vf`)*
+- `vs` → **Subs:** Procedures that perform an action without returning a value. A variable that holds a sub takes `vs`. **e.g.:** `vsExportPDF`, `vsRenderMessage`, `vsRender = vIsMobile ? vsRenderCompact : vsRenderFull`
 - `bt` → **Buttons:** A button, or the procedure it fires, **e.g.:** `btSubmit` (the element), `bt_vsSubmit()` (the procedure) — followed by another token, it takes `_`&#32;
-- `bv_` → **Parameters:** Every parameter starts with `bv_`, followed by its own token. **e.g.:** `s``u``b v``sRenderCallout(bv_sHost, bv_dtCopy, bv_vIsAssertive)`, `fu``nction vf``HexToRGB(``b``yV`` al  ``b``v``_``v``HexColor` ` As String) As  ``Lo``n``g`
+- `bv_` → **Parameters:** Every parameter starts with `bv_`, followed by its own token. **e.g.:** `vsRenderCallout(bv_sHost, bv_dtCopy, bv_vIsAssertive)`, `Function fnHexToRGB(ByVal bv_vHexColor As String) As Long`
 - `lm` → **Lambda Parameter:** Parameters inside an Excel `LAMBDA` or an M function. **e.g.:** `=LAMBDA(lmCell, IF(lmCell<>0...))`
 - `fm` → **Forms:** A dialog (VBA UserForm) or one of its fields (web). A field's `name`, `id` and payload key are one string, and the same fact keeps it in every form. **e.g.:** `fmTransferTokens`, `fmCNPJ`
 - `cl` → **Class:** The class itself, or a variable holding a class; an object made from it is an `s`. **e.g.:** `clCustomer`, `clLayout = dtLayouts[bv_vKey]`
@@ -190,15 +190,10 @@ This repository defines a strict **Notation** tailored for multi-language projec
 
 - `fnMain` → **Entry Point:** The function a script runs first; it returns the exit code. **e.g.:** `sys.exit(fnMain())`
 
-### 🔹Variables
-
-- `ar` → **Sequences:** Any list, tuple, set, deque or array. **e.g.:** `arWaves`, `arQueue = deque([bv_vStart])`
-
 ### 🔹Kept from Python
 
 - **Files:** snake\_case, since they are import names. **e.g.:** `wf_generate.py`, `cm_pipeline.py`
 - **`_`**** **→ **Throwaway ****:**`_` alone is a value thrown away, not the auxiliary prefix. **e.g.:** `for vA, _, vName in arPasses`
-- **Command-line options:** kebab-case, so the attributes argparse makes from them are snake\_case. **e.g.:** `--ore-rolls` → `sArgs.ore_rolls`
 
 ---
 

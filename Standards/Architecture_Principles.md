@@ -8,7 +8,7 @@
 
 ## Visualizing the Module Hierarchy
 
-Example: a web project. In a VBA project, the same layers are `vb` sheet modules, `wf_` and `cm_` modules, and the `sys_` core.
+Example: a web project. In a VBA project, the same layers are `vb` sheet modules, `wf_` and `cm_` modules, and the `sys_` core. In Python, a `wf_` script, `cm_` modules, `sys_config.py`, and a plain-named folder for interchangeable services.
 
 ```
 /General_Project_Structure
@@ -64,15 +64,15 @@ In many projects, logic is often buried inside Button Clicks or Worksheet Events
 
 - **Module:** `CrossModules (cm_)` (and Class Modules)
 - **Purpose:** Reusable logic and algorithms. This code is agnostic of the specific client calling it. **Why:**  Services act as the project's toolkit of trusted behaviours and patterns. They are built to be reused, evolved, and carried into future projects. The most valuable ones are preserved in [Dev-Patterns-and-Snippets](https://github.com/GabrielOlC/Dev-Patterns-and-Snippets/tree/main/.Snippets), enabling new projects to begin with proven code rather than empty modules.
-- **Rule:** Functions must accept arguments (`ByVal`) rather than reading directly from grid ranges, ensuring testability and reusability. That is: the service has no idea who called it, never fetches its own inputs from the client and therefore is usable by any controller. It may write to the client, but only where the controller points — or, by fixed name, to an element's satellite (e.g., `fmCNPJ` → `fmCNPJ-message`) or to a fixture every page carries (e.g., `#live-region-polite`). **e.g.:** `vsAnnounce(bvMessage, bvIsAssertive)`
+- **Rule:** Functions must accept arguments (`ByVal`) rather than reading directly from grid ranges, ensuring testability and reusability. That is: the service has no idea who called it, never fetches its own inputs from the client and therefore is usable by any controller. It may write to the client, but only where the controller points — or, by fixed name, to an element's satellite (e.g., `fmCNPJ` → `fmCNPJ-message`) or to a fixture every page carries (e.g., `#live-region-polite`). **e.g.:** `vsAnnounce(bv_vMessage, bv_vIsAssertive)`
 - **Naming:** Grouped by functional domain. **e.g.:** `cm_calculations`
 - **Ready for Many, Built for One:** A service is shaped for a second client from the start, but its machinery must wait until that client exists. Arguments replace hard-coded values and the signature can grow optional arguments; mode switches, tables and registries arrive with the second real client. **e.g.:** `fnReplaceInCol` took a list of rules from day one, so new modes were added later without touching existing calls.
-- **Extend Without Breaking:** New behaviour arrives as an optional argument whose default keeps every existing call unchanged. **e.g.:** `formatField(value, formatter, options = {})`. Also, a service may call another service. **e.g.:** A client needs to submit and normalize a CNPJ. Since a normalization service already exists, this service first calls the normalization service and then submits the normalized CNPJ.
+- **Extend Without Breaking:** New behaviour arrives as an optional argument whose default keeps every existing call unchanged. **e.g.:** `vsBind(bv_sInput, bv_fnFormat, bv_vContentPattern)`, where only the CNPJ field passes the third. Also, a service may call another service. **e.g.:** A client needs to submit and normalize a CNPJ. Since a normalization service already exists, this service first calls the normalization service and then submits the normalized CNPJ.
 - **Documentation:** Every service file opens with the header in [In code Snippets](https://github.com/GabrielOlC/Dev-Patterns-and-Snippets/blob/main/Templates/In%20code%20Snippets.md). One header per file, because each file solves one concern.
 
 ### 🔹 Limits of Reuse of a service
 
-- **Configure, Don't Copy:** Preferably, a new client requirement is added as an entry in a table, not as new code. **e.g.:** a new CEP provider is a new entry to the argument  `bvProviders` not a new `cm_FetchAddress`.
+- **Configure, Don't Copy:** Preferably, a new client requirement is added as an entry in a table, not as new code. When the variants differ by code rather than data, each one is a service file that fills the same contract, and the calling service finds them by itself, so adding one changes nothing else. **e.g.:** a new CEP provider is a new entry in `bv_arProviders`, not a new `cm_FetchAddress`; a new map layout is a new file in `/layouts`, not a new branch in `cm_pipeline`.
 - **Same Look, Different Job:** Components that look alike but serve different purposes are kept separate rather than merged into one service with branches. **e.g.,** two clients that need a CEP API, but one needs a specific fallback order, while the other needs a single API with no fallback.
 
 ---
@@ -83,8 +83,8 @@ Principles from *Object Calisthenics* are applied to enforce code hygiene and re
 
 1. **One Level of Indentation per Method:** Deeply nested `If/Loop` structures are refactored into smaller, distinct helper functions.
 2. **No "Magic Values":** Hardcoded values are prohibited. Numbers, strings, limits, timeouts, sizes, e-mail addresses, URLs, file paths, and similar configuration data must be defined in sys\_ and referenced through named constants. (**e.g.:** `sys_config.cRequestTimeoutMs`, `sys_config.cMaxPDFBytes`, `sys_config.cContactEmail`, `sys_config.cSupportURL`).
-3. **Explicit Declaration:** Each client names its own configuration instead of having it inferred from a file path or position. **e.g.:**  In the page:`<html data-page="cadastro-afiliado">` in the sys\_  `sys_config.dtPages = { 'cadastro-afiliado': { cDevMode: false } }`
-4. **Self-Documenting Code:** Variable names must be descriptive (`vRowCount` vs `r`). A comment is added only where the code cannot say it, and then it gives the reason in a line or two.
+3. **Explicit Declaration:** Each client names its own configuration instead of having it inferred from a file path or position. **e.g.:** In the page:`<html data-page="cadastro-afiliado">` in the sys\_ `sys_config.dtPages = { 'cadastro-afiliado': { cDevMode: false } }`
+4. **Self-Documenting Code:** Variable names must be descriptive (`vRowCount` vs `r`); short loops follow the loop-counter rule in the Naming Conventions. A comment is added only where the code cannot say it, and then it gives the reason in a line or two.
 5. **Lists over Booleans:** Membership is expressed as a list, so changing it means adding or removing a name rather than flipping flags. **e.g.:** `arRequiredFields`, `vAcceptsFiles`
 6. **Label vs. Value:** The text a person reads can be rewritten at any time; the value that is stored is the contract. Stored values are canonical (digits only, no masks); formatting belongs to the interface. **e.g.:** the page shows *Não tenho preferência* and stores `sem_preferencia`.
 7. **Clients Name, Never Choose:** Anything sent from a browser can be forged, so a page only names a route (through `sys_config`) and sends its content; the gateway maps that route to its destination and credentials, adds the facts a client could fake, and refuses any route it doesn't know. **e.g.:** pages post to `/api/<form>/<action>`; only the gateway knows which API that route reaches and which key unlocks it.
@@ -114,9 +114,10 @@ Errors are managed through a dual strategy of **Prevention** and **Graceful Fail
 
 ### 🔹 Centralized Handling
 
-- **Module:** `ErrorHandler`
-- **Pattern:** All primary procedures implement a standardized error trapping block.
+- **Check at the edge:** A service checks what it receives from outside its control (a plugin's result, an API response, a user's file) before using it, and stops with an error that names what is wrong. **e.g.:** `_vsValidateResult` raises a `ValueError` naming the missing field.
+- **One handler per entry point:** Every entry point (a button procedure, a page controller, a script's `fnMain`) catches errors in one place, logs them, and shows a message the person can act on. **e.g.:** `vsLogAndAlert` in VBA.
 - **Logging:** Exceptions are not merely displayed; they are logged (timestamp, user, error description) to a secure log sheet or database for auditing purposes.
+- **Exit codes:** A script returns `0` when everything passed, `1` when a check failed and `2` for wrong input.
 
 ```vba
 ' Standard Pattern Example
