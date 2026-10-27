@@ -21,6 +21,8 @@ This repository defines a strict **Notation** tailored for multi-language projec
 - **Units:** A quantity ends with its unit: `Ms`, `Bytes`, `Days`, `Years`. **e.g.:** `cRequestTimeoutMs`, `cMaxPDFBytes`
 - **Second instance:** The same thing, repeated, takes a number instead of a synonym; a different thing gets its own name. **e.g.:** two personal phones are `fmRespWhatsApp` and `fmRespWhatsApp2`; the institutional one is `fmWhatsAppInstitucional`.
 - **Same fact, same name:** The original caller is preferable. When a value is stored again, to shorten a long caller or avoid repeating heavy work, it keeps its descriptive part, so one search finds both. A new name is only for a new fact. `sys_` is never stored again. **e.g.:** `vFormsPath = sURL.pathname` keeps *Path*, the same fact; `dtRoute = dtRoutes[vFormsPath]` keeps *Route*, one item of the same collection; `vIsDebug = cDebugMode && !vIsProduction` derives a new fact, so it gets a new name.
+- **Native names:** Names set by the language or by an API stay as they are. **e.g.:** `self`, `__init__`, `sURL.pathname`
+- **Loop counters:** Short loops, comprehensions and lambdas may use `z`, `x`, `c` and `v`; nested ones combine them (`zz`, `zx`, `zc`…). Anything longer gets a descriptive name. **e.g.:** `for z in arWaves`
 
 ### Values
 
@@ -44,43 +46,43 @@ This repository defines a strict **Notation** tailored for multi-language projec
 
 - `wf_` → **Controller Files:** **e.g.:** a VBA module `wf_Dashboard`, a page script `wf_afiliado.js`
 - `cm_` → **Service Files:** **e.g.:** a VBA module `cm_Calculations`, a script `cm_forms.js`, a SQL file `cm_<structure>.sql` that builds a reusable database structure
+- **Plugin folders:** A folder of interchangeable services with one scope keeps plain file names; the folder states the role. **e.g.:** `/layouts/biomes_confluence.py`
 
 ---
 
 ### Default
 
-> **Tokens used in more than one language.** A token starts in the language that first needed it and moves here once a second language adopts it. For reference, each language chapter lists, by name, the tokens it takes from here. \
-
-\
-Where a language gives a token a local meaning, the local one wins inside that language, **e.g.:** `c` for columns in SQL.
+> **Tokens used in more than one language.** A token starts in the language that first needed it and moves here once a second language adopts it. For reference, each language chapter lists, by name, the tokens it takes from here.
+> 
+> Where a language gives a token a local meaning, the local one wins inside that language, **e.g.:** `c` for columns in SQL.
 
 - `v` → **Variable (Standard):** Basic values like integers, strings and booleans; also a `LET` variable, an M step or a SQL CTE. **e.g.:** `vRowCount`, `vUserName`
-- `s` → **Object References:** In VBA, an object assigned with `Set`; in JavaScript, any object, DOM elements included. **e.g.:** `sFileDialog`, `sRange`, `sBtnSubmit`
-- `c` → **Constant:** A value that never changes while the code runs. **e.g.:** `cMaxPDFBytes`
+- `s` → **Object References:** Any object, including one made from a class; in VBA, an object assigned with `Set`; in JavaScript, DOM elements too. **e.g.:** `sRange`, `sBtnSubmit`, `sCustomer = clCustomer()`
+- `c` → **Constant:** A single setting or limit, fixed on purpose. The one token that never stacks: a fixed dictionary or list keeps its own token. **e.g.:** `cMaxPDFBytes`, `cDebugMode`, but `dtRoutes`
 - `ar` → **Array:** Variable with multiple values. **e.g.:** `arItems`, `arPrices`
-- `dt` → **Dictionary:** Key-value pair collection; in JavaScript, also any plain object used as a record or a lookup table. **e.g.:** `dtConfig`, `dtRoutes`
-- `fn` → **Functions:** Procedures that return a value. **e.g.:** `fnGetLastRow`, `fnIsValidCPF` *(legacy: `vf`)*
+- `dt` → **Dictionary:** Key-value pair collection; in JavaScript, also any plain object used as a record or a lookup table. A property read like a variable takes its token; a key looked up as data takes none and follows *Values*. **e.g.:** `dtRoutes`, `sys_config.dtPages['cadastro-afiliado'].cDevMode`
+- `fn` → **Functions:** Procedures that return a value. A variable that holds a function takes `fn`, by what the function does. **e.g.:** `fnGetLastRow`, `fnIsValidCPF`, `for (const fnCheck of [fnIsValidCPF, fnIsValidCNPJ])` *(legacy: `vf`)*
 - `vs` → **Subs:** Procedures that perform an action without returning a value. **e.g.:** `vsExportPDF`, `vsRenderMessage`
 - `bt` → **Buttons:** A button, or the procedure it fires, **e.g.:** `btSubmit` (the element), `bt_vsSubmit()` (the procedure) — followed by another token, it takes `_`&#32;
-- `bv` → **Parameters (by value):** Arguments that do **not** change the original variable. Objects, dictionaries and arrays keep their own prefix. **e.g.:** `Sub vsProcessData(bvInputValue As String)`, `vsRenderCallout(sHost, dtCopy)`
+- `bv_` → **Parameters:** Every parameter starts with `bv_`, followed by its own token. **e.g.:** `s``u``b v``sRenderCallout(bv_sHost, bv_dtCopy, bv_vIsAssertive)`, `fu``nction vf``HexToRGB(``b``yV`` al  ``b``v``_``v``HexColor` ` As String) As  ``Lo``n``g`
 - `lm` → **Lambda Parameter:** Parameters inside an Excel `LAMBDA` or an M function. **e.g.:** `=LAMBDA(lmCell, IF(lmCell<>0...))`
 - `fm` → **Forms:** A dialog (VBA UserForm) or one of its fields (web). A field's `name`, `id` and payload key are one string, and the same fact keeps it in every form. **e.g.:** `fmTransferTokens`, `fmCNPJ`
-- `cl` → **Class:** A custom class, or an object made from it. **e.g.:** `clCustomer`
-- `mcl` → **Class Member:** A private variable inside a class. **e.g.:** `Private mclID as String`
+- `cl` → **Class:** The class itself, or a variable holding a class; an object made from it is an `s`. **e.g.:** `clCustomer`, `clLayout = dtLayouts[bv_vKey]`
 
 ## VBA Specifics
 
 **My VBA architecture follows** ***O****bject Calisthenics **P**rinciples***: sheet modules handle triggers, while logic lives in distinct WorksheetFunctions (`wf_`) and CrossModules (`cm_`) modules. Refer to `Architecture_Principles.md`.**
 
-**From Default:** `v`, `s`, `c`, `ar`, `dt`, `fn`, `vs`, `bt`, `bv`, `fm`, `cl`, `mcl`
+**From Default:** `v`, `s`, `c`, `ar`, `dt`, `fn`, `vs`, `bt`, `bv_`, `fm`, `cl`
 
 ### 🔹Components & Constructs
 
 - `vb` → **Sheet Modules:** Representing the code behind a specific worksheet. **e.g.:** `vbDashboard`, `vbDataInput`
+- `mcl` → **Class Member:** A private variable inside a class module; VBA has no `self.` or `this.` to mark it. **e.g.:** `Private mclDebt As Double`
 
 ### 🔹Arguments & Parameters
 
-- `bf` → **ByRef:** Arguments passed by reference; changes inside the function **do** affect the original variable. **e.g.:** `Function fnUpdateCount(bfCounter As Integer)`
+- `bf_` → **ByRef:** Arguments passed by reference; changes inside the function **do** affect the original variable. Like `bv_`, followed by its own token. **e.g.:** `Function fnUpdateCount(bf_vCounter As Integer)`
 
 ### 🔹Variables
 
@@ -110,7 +112,7 @@ Where a language gives a token a local meaning, the local one wins inside that l
 
 ### 🔹LAMBDA Functions
 
-- `lmd` → **Lambda Definition:** The name of the custom LAMBDA function in the Name Manager. **e.g.:** `lmdNotEmptyOrZero` (Alias: `lmdNEZ`)
+- `lmd` → **Lambda Definition:** A custom LAMBDA, named in the Name Manager or held in a `LET` variable. **e.g.:** `lmdNotEmptyOrZero` (Alias: `lmdNEZ`), `=LET(lmdTax, LAMBDA(lmValue, lmValue*0.1), lmdTax(A1))`
 
 ---
 
@@ -118,7 +120,7 @@ Where a language gives a token a local meaning, the local one wins inside that l
 
 **Standards for ETL processes and Data Analysis Expressions.**
 
-**From Default:** `v`, `bv`, `fn`, `lm`
+**From Default:** `v`, `bv_`, `fn`, `lm`
 
 ### 🔹Queries
 
@@ -167,7 +169,7 @@ Where a language gives a token a local meaning, the local one wins inside that l
 
 ## JavaScript & Browser
 
-**From Default:** `v`, `s`, `c`, `ar`, `dt`, `fn`, `vs`, `bt`, `bv`, `fm`, `cl`
+**From Default:** `v`, `s`, `c`, `ar`, `dt`, `fn`, `vs`, `bt`, `bv_`, `fm`, `cl`
 
 ### 🔹Casing
 
@@ -177,6 +179,26 @@ Where a language gives a token a local meaning, the local one wins inside that l
 
 - `<fieldId>-<role>` → **Satellites:** Elements serving one field take its id, a hyphen and their role. **e.g.:** `fmCNPJ-hint`, `fmCNPJ-message`
 - `data-<key>` → **Declarations & State:** Attributes in kebab-case; a state value is the same word the code and the payload use. **e.g.:** `data-page="cadastro-afiliado"`, `data-state="already_registered"`
+
+---
+
+## Python Specifics
+
+**From Default:** `v`, `s`, `c`, `ar`, `dt`, `fn`, `vs`, `bv_`, `cl`
+
+### 🔹Components & Constructs
+
+- `fnMain` → **Entry Point:** The function a script runs first; it returns the exit code. **e.g.:** `sys.exit(fnMain())`
+
+### 🔹Variables
+
+- `ar` → **Sequences:** Any list, tuple, set, deque or array. **e.g.:** `arWaves`, `arQueue = deque([bv_vStart])`
+
+### 🔹Kept from Python
+
+- **Files:** snake\_case, since they are import names. **e.g.:** `wf_generate.py`, `cm_pipeline.py`
+- **`_`**** **→ **Throwaway ****:**`_` alone is a value thrown away, not the auxiliary prefix. **e.g.:** `for vA, _, vName in arPasses`
+- **Command-line options:** kebab-case, so the attributes argparse makes from them are snake\_case. **e.g.:** `--ore-rolls` → `sArgs.ore_rolls`
 
 ---
 
