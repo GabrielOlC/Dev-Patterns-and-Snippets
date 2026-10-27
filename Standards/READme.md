@@ -1,152 +1,200 @@
 # 📏 Naming Conventions & Patterns
 
-This repository defines a strict **Notation** tailored for multi-language data projects. This ensures that any variable's scope and type are instantly recognizable without navigating to its definition. It also allows fast CTRL-F across multi-language projects.
+Oct 22, 2026 · @Gabriel
 
-**Note: This is a Living Document. Standards may evolve as new technologies are integrated.**
+This repository defines a strict **Notation** tailored for multi-language projects. This ensures that any variable's scope and type are instantly recognizable without navigating to its definition. It also allows fast CTRL-F across multi-language projects.
 
-* * *
+**Complementary:** `Architecture_Principles.md` defines where code lives, the layers that `wf_`, `cm_` and `sys_` point to.
+
+**Note: This is a Living Document. Standards may evolve as new technologies are integrated. This might result in mixed scopes like: spreadsheets (from excel), pages (from web development), tables (from databases) and so on.**
+
+---
 
 ## Universal Prefixes
 
-> Note: Prefix that may overlap another prefix receive `_`. **e.g.,** `qr_tbSDDash`. `tb` comes from the excel table, which means this is a workbook table query load.
+> Note: A prefix that can be followed by another token ends in `_`, so both stay readable. **e.g.:** `qr_tbSDDash` is a query (`qr_`) loading the Excel table `tbSDDash`.
+
+### Anatomy
+
+> **A name is a token (scope and type) followed by a descriptive part (what the thing is). Casing follows the language.**
+
+- **Descriptive part:** English, acronyms in caps. **e.g.:** `cTermsURL`, `fmCNPJ`, `FK_OrderID`
+- **Booleans:** The descriptive part opens with `Is`, `Has`, `Needs`, `Show` or `Skip`. **e.g.:** `vIsValid`, `vHasExpired`, `cShowCountdown`
+- **Units:** A quantity ends with its unit: `Ms`, `Bytes`, `Days`, `Years`. **e.g.:** `cRequestTimeoutMs`, `cMaxPDFBytes`
+- **Second instance:** The same thing, repeated, takes a number instead of a synonym; a different thing gets its own name. **e.g.:** two personal phones are `fmRespWhatsApp` and `fmRespWhatsApp2`; the institutional one is `fmWhatsAppInstitucional`.
+- **Same fact, same name:** The original caller is preferable. When a value is stored again, to shorten a long caller or avoid repeating heavy work, it keeps its descriptive part, so one search finds both. A new name is only for a new fact. `sys_` is never stored again. **e.g.:** `vFormsPath = sURL.pathname` keeps *Path*, the same fact; `dtRoute = dtRoutes[vFormsPath]` keeps *Route*, one item of the same collection; `vIsDebug = cDebugMode && !vIsProduction` derives a new fact, so it gets a new name.
+
+### Values
+
+> **Values that travel between systems are written the same way everywhere.**
+
+- **Dates:** ISO 8601 with an explicit offset, wherever the format allows. **e.g.:** `2026-10-08T16:00:00-03:00`, never `2026-10-08 16:00`
+- **Stored options:** Lower snake\_case in the domain's language, without accents. **e.g.:** `sem_preferencia`
+- **Metadata keys:** Keys written by the system, rather than taken from a field, are lower snake\_case. **e.g.:** `form_id`, `debug_mode`, `received_at`
 
 ### Primary
 
->  **These prefixes apply across all languages (Excel, VBA, SQL, M) to denote data relationships and system configurations.**
+> **These prefixes apply across all languages to denote data relationships and system configurations.**
 
-* `sys_` → **System Variables:** Configuration settings defined globally (e.g., `sys_cnFilePath`, `sys_DateLimit`). **Use situation:** Using a dynamic in‑book cell to set a VBA header name/range. A normal cell name would be `cnCellName`, but since this cell is a static reference in code used to dynamically set the header ranges, it is called `sys_cnCellName`.
+- `sys_` → **System Variables:** Configuration settings defined globally, always called in full, never stored in another variable or renamed. **e.g.:** `sys_cnFilePath`, `sys_DateLimit`, `sys_config.js`. **Use situation:** Using a dynamic in‑book cell to set a VBA header name/range. A normal cell name would be `cnCellName`, but since this cell is a static reference in code used to dynamically set the header ranges, it is called `sys_cnCellName`.
+- `FK_` → **Foreign Keys:** Explicitly marking relational data IDs in tables or SQL queries. **e.g.:** `FK_CustomerID`, `FK_OrderID`
+- `aux_` or `_` or `.` → **Auxiliary Elements:** Helper tables, temporary calculations, or intermediate staging data. **e.g.:** `_tbCalculation`, `.MidCalc`, `aux_FilterCol`. **Use situation:** Python’s personalized functions may use `_`, Notion’s user‑visible properties may use `.`, and Excel formulas may use `aux_`. *(legacy: `sup`, `sub`)*
 
-* `FK_` → **Foreign Keys:** Explicitly marking relational data IDs in tables or SQL queries (e.g., `FK_CustomerID`, `FK_OrderID`). Note: All lower in postgres
+### Files
 
-* `aux_` or `_` or `.` → **Auxiliary Elements:** Helper tables, temporary calculations, or intermediate staging data (e.g., `_tbCalculation`, `.MidCalc`, `aux_FilterCol`). **Use situation:** Python’s personalized functions may use `_`, Notion’s user‑visible properties may use `.`, and Excel formulas may use `aux_`.
-  
-  * **Note:** This convention was, for a long time, referred to as `sup`, `sub` (legacy).
+> **The layer a file belongs to is in its name, in every language.** The layers themselves are defined in `Architecture_Principles.md`; `sys_` and `aux_` (above) name files too.
 
-* * *
+- `wf_` → **Controller Files:** **e.g.:** a VBA module `wf_Dashboard`, a page script `wf_afiliado.js`
+- `cm_` → **Service Files:** **e.g.:** a VBA module `cm_Calculations`, a script `cm_forms.js`, a SQL file `cm_<structure>.sql` that builds a reusable database structure
+
+---
 
 ### Default
 
-> **This is a summary of every code language variable**
+> **Tokens used in more than one language.** A token starts in the language that first needed it and moves here once a second language adopts it. For reference, each language chapter lists, by name, the tokens it takes from here. \
 
-* `v` → **Variable(Standard):** Basic data types like Integer, String, Boolean. **e.g.:**`vRowCount`, `vUserName`
-* `s` → **Set (Objects):** Object variables that require the `Set` keyword. **e.g.:**`sFileDialog`, `sRange`
-* `c`  → **Constant:** Canstant variable. **e.g.:** `ctbID` 
-* `rs` → **Recordset:** Variables of type `ADODB.Recordset`.
-* `wb` → **Connection:** Variables of type `ADODB.Connection` (Database connectivity).
-* `cn` → **Cell Name:** Named ranges referencing specific cells. **e.g.:**`cnTaxRate`, `cnFilePath`
-* `fn` → **Functions:** Procedures that return a value by given an argument **e.g.:**`fnGetLastRow`, `fnCalculateTax`
-* `m`→ **Measures**: Measures returning a value. **e.g.:** `mAnimalCount`
-* `ar` → **Array:** Variable with multiple values. **e.g.:** `arItems`, `arPrices`
-* `dt` → **Dictionary:** Key-value pair collection. **e.g.:** `dtConfig`, `dtUserData`
+\
+Where a language gives a token a local meaning, the local one wins inside that language, **e.g.:** `c` for columns in SQL.
+
+- `v` → **Variable (Standard):** Basic values like integers, strings and booleans; also a `LET` variable, an M step or a SQL CTE. **e.g.:** `vRowCount`, `vUserName`
+- `s` → **Object References:** In VBA, an object assigned with `Set`; in JavaScript, any object, DOM elements included. **e.g.:** `sFileDialog`, `sRange`, `sBtnSubmit`
+- `c` → **Constant:** A value that never changes while the code runs. **e.g.:** `cMaxPDFBytes`
+- `ar` → **Array:** Variable with multiple values. **e.g.:** `arItems`, `arPrices`
+- `dt` → **Dictionary:** Key-value pair collection; in JavaScript, also any plain object used as a record or a lookup table. **e.g.:** `dtConfig`, `dtRoutes`
+- `fn` → **Functions:** Procedures that return a value. **e.g.:** `fnGetLastRow`, `fnIsValidCPF` *(legacy: `vf`)*
+- `vs` → **Subs:** Procedures that perform an action without returning a value. **e.g.:** `vsExportPDF`, `vsRenderMessage`
+- `bt` → **Buttons:** A button, or the procedure it fires, **e.g.:** `btSubmit` (the element), `bt_vsSubmit()` (the procedure) — followed by another token, it takes `_`&#32;
+- `bv` → **Parameters (by value):** Arguments that do **not** change the original variable. Objects, dictionaries and arrays keep their own prefix. **e.g.:** `Sub vsProcessData(bvInputValue As String)`, `vsRenderCallout(sHost, dtCopy)`
+- `lm` → **Lambda Parameter:** Parameters inside an Excel `LAMBDA` or an M function. **e.g.:** `=LAMBDA(lmCell, IF(lmCell<>0...))`
+- `fm` → **Forms:** A dialog (VBA UserForm) or one of its fields (web). A field's `name`, `id` and payload key are one string, and the same fact keeps it in every form. **e.g.:** `fmTransferTokens`, `fmCNPJ`
+- `cl` → **Class:** A custom class, or an object made from it. **e.g.:** `clCustomer`
+- `mcl` → **Class Member:** A private variable inside a class. **e.g.:** `Private mclID as String`
 
 ## VBA Specifics
 
-**My VBA architecture follows Object Calisthenics principles: Sheet modules handle triggers, while logic is encapsulated in distinct "WorksheetFunctions" or "CrossModules". Refer to `Architecture_Principles.md`**
+**My VBA architecture follows** ***O****bject Calisthenics **P**rinciples***: sheet modules handle triggers, while logic lives in distinct WorksheetFunctions (`wf_`) and CrossModules (`cm_`) modules. Refer to `Architecture_Principles.md`.**
+
+**From Default:** `v`, `s`, `c`, `ar`, `dt`, `fn`, `vs`, `bt`, `bv`, `fm`, `cl`, `mcl`
 
 ### 🔹Components & Constructs
 
-* `vb` → **Sheet Modules:** Representing the code behind a specific worksheet. **e.g.:**`vbDashboard`, `vbDataInput`
-
-* `fn` → **VBA Functions:** Procedures that return a value. **e.g.:**`fnGetLastRow`, `fnCalculateTax`
-  
-  * (legacy) fn in VBA used to be called vf
-
-* `vs` → **VBA Sub:** Procedures that perform an action without returning a value. **e.g.:**`vsExportPDF`, `vsClearInputs`
-
-* `cl` → **Class:** Variables representing a custom Class Object. **e.g.:**`clCustomer`
-
-* `mcl` → **Module Class Variable:** Private variables defined within a Class module. **e.g.:**`Private mclID as String`
-
-* `bt_`→**Buttons:** Subs or Functions that are triggered by a worksheet button. **e.g.:**`bt_vsUpdateAllTokens()`
-
-* `fm`→ **User Forms:** Custom dialog windows. **e.g.:** `fmTransferTokens`
+- `vb` → **Sheet Modules:** Representing the code behind a specific worksheet. **e.g.:** `vbDashboard`, `vbDataInput`
 
 ### 🔹Arguments & Parameters
 
-* `bv` → **ByValue:** Arguments passed by value; changes inside the function do **not** affect the original variable. **e.g.:**`Sub vsProcessData(bvInputValue As String)`
-* `bf` → **ByRef:** Arguments passed by reference; changes inside the function **do** affect the original variable. **e.g.:**`Function vfUpdateCount(bfCounter As Integer)`
+- `bf` → **ByRef:** Arguments passed by reference; changes inside the function **do** affect the original variable. **e.g.:** `Function fnUpdateCount(bfCounter As Integer)`
 
 ### 🔹Variables
 
-* `v` → **Dim Variable(Standard):** Basic data types like Integer, String, Boolean. **e.g.:**`vRowCount`, `vUserName`
-* `s` → **Set (Objects):** Object variables that require the `Set` keyword. **e.g.:**`sFileDialog`, `sRange`
-* `c` → **Constant:** Canstant variable. **e.g.:** `ctbID`
-* `rs` → **Recordset:** Variables of type `ADODB.Recordset`
-* `wb` → **Connection:** Variables of type `ADODB.Connection` (Database connectivity).
-* `ar` → **Array:** Variable with multiple values. **e.g.:**  `arItems`, `arPrices`
-* `dt` → **Dictionary:** Key-value pair collection. **e.g.:** `dtConfig`, `dtUserData`
+- `rs` → **Recordset:** Variables of type `ADODB.Recordset`.
+- `wb` → **Connection:** Variables of type `ADODB.Connection` (Database connectivity).
 
-* * *
+---
 
 ## Excel Formulas & Structure
 
 **Patterns for named ranges, tables, and LAMBDA functions to keep the spreadsheet layer clean.**
 
+**From Default:** `v`, `lm`
+
 ### 🔹Tables & Objects
 
-    **Structure:** [`SheetInitials` all in CAPS] + [First letters of `Name` in CAPS].
+**Structure:** `<SheetInitials>` in caps, then the first letters of `<Name>` in caps.
 
-* `tb[SheetInitials][Name]` → **Tables:** Structured Excel Tables. **e.g.:** `tbSDDash` (Sheet: **S**ummed **D**ata, Table: **DASH**).
-* `ptb[SheetInitials][Name]` → **PivotTables:** Structured Excel Pivot tables. **e.g.:** `ptbSDDash` (Sheet: **S**ummed **D**ata, Table: **DASH**)
-* `obj[SheetInitials][Name]` → **Objects:** Shapes, buttons, or form controls. **e.g.:** `objMMButton` (Sheet: **M**ain **M**enu, Object: **BUTTON**).
+- `tb<SheetInitials><Name>` → **Tables:** Structured Excel Tables. **e.g.:** `tbSDDash` (Sheet: **S**ummed **D**ata, Table: **DASH**).
+- `ptb<SheetInitials><Name>` → **PivotTables:** Structured Excel Pivot tables. **e.g.:** `ptbSDDash` (Sheet: **S**ummed **D**ata, Table: **DASH**)
+- `obj<SheetInitials><Name>` → **Objects:** Shapes, buttons, or form controls. **e.g.:** `objMMButton` (Sheet: **M**ain **M**enu, Object: **BUTTON**).
 
 ### 🔹Named Ranges & Variables
 
-* `cn` → **Cell Name:** Named ranges referencing specific cells (**e.g.:**`cnTaxRate`, `cnFilePath`).
-* `v` → **LET Variable:** Variables defined inside a `LET` formula function. (**e.g.:** `=LET(vTotal, SUM(A:A), vTotal * 0.1)`)
-  * Note: All equations should be inside a variable; the last argument which can be a function without a variable should not exist, instead, replace it with a simpler `v` to facilitate testing. The maximum complexity the last equation should be formatting. **e.g.:** `=LET(v, complex equation, FORMAT(v,"yyyy-mm-dd"))` 
+- `cn` → **Cell Name:** Named ranges referencing specific cells (**e.g.:** `cnTaxRate`, `cnFilePath`).
+- **LET Rule:** Every equation inside a `LET` sits in a `v` variable; the last argument only returns a variable, at most wrapped in formatting, so each step can be tested on its own. **e.g.:** `=LET(vDueDate, complex equation, FORMAT(vDueDate,"yyyy-mm-dd"))`
 
 ### 🔹LAMBDA Functions
 
-* `lmd` → **Lambda Definition:** The name of the custom LAMBDA function in the Name Manager. **e.g.:** `lmdNotEmptyOrZero` (Shortened: `lmdNEZ`)
-* `lm` → **Lambda Parameter:** Internal variables used within the LAMBDA logic. **e.g.:** `=LAMBDA(lmCell, IF(lmCell<>0...))`
+- `lmd` → **Lambda Definition:** The name of the custom LAMBDA function in the Name Manager. **e.g.:** `lmdNotEmptyOrZero` (Alias: `lmdNEZ`)
 
-* * *
+---
 
 ## Power Query (M) & DAX
 
 **Standards for ETL processes and Data Analysis Expressions.**
 
+**From Default:** `v`, `bv`, `fn`, `lm`
+
 ### 🔹Queries
 
-* `qr_` → **Query Tables:** Final output queries loaded to the grid or data model. **e.g.:** `qr_tbSDDash`, `qr_Products`.
-
-### 🔹Functions
-
-* `fn` → **M Functions:** Custom Power Query functions. **e.g.:** `fnUnzipXML`, `fnParseDate`.
+- `qr_` → **Query Tables:** Final output queries loaded to the grid or data model. **e.g.:** `qr_tbSDDash`, `qr_Products`.
 
 ### 🔹Measures
 
-* `m`→ **Measures**: Measures returning a value. **e.g.:** `mAnimalCount`
+- `m` → **Measures:** DAX measures returning a value. **e.g.:** `mAnimalCount`
 
 ---
 
 ## SQL & Database
 
-**Standards for relational objects.**
+**Postgres folds unquoted names to lower case, so every SQL name is lower snake\_case, and every prefix ends in `_`. A name has at most 63 characters; Postgres cuts longer ones without warning.**
 
-TODO: Need change all caps for _  as postgres doesn't like having those
+**From Default:** `v`, `c` (inside functions and CTEs), joined to the name like columns
 
 ### 🔹Objects
 
-* `tb` → **Tables:** Base tables holding records. **e.g.:** `tbOngs`, `tbLocalContacts`, `tbSends`(two names are prefered but not required)
-* `vw` → **Views:** Stored `SELECT` behaving as a read-only table. **e.g.:** `vwOngsActive`
-* `vwm` → **Materialized Views:** Views stored on disk, refreshed on command. **Use situation:** Only once an aggregation is measurably slow and stale data is acceptable. **e.g.:** `vwmCampaignPerformance`
-* `ix_[Table][Columns]` → **Indexes:** Planner lookup structures, never referenced in a query.  **e.g.:** `ix_tbOngsMails`, `ix_tbContactsMails`
-* `fn` → **SQL Functions:** Routines returning a value, including trigger bodies and RPC targets. **e.g.:** `fnSetUpdatedAt`
-* `trg_[Table][Action]` c**Triggers:** Code fired by an insert, update or delete. Holds no logic; executes an `fn`. **e.g.:** `trg_tbOngsSetUpdated`
-* `pol_[Table][Action][Who]` → **Policies:** Such as Row Level Security rules. **e.g.:** `pol_tbOngsSelectAuth` 
-* `tp_` → **Types:** Custom enums, composites, or user-defined base types that group specific static structures. **e.g.:** `tp_contact_channel`, `tp_roles`
-* `dm_` → **Domains:** Types with validations **e.g.:**`dm_cnpj`
+- `sch_` → **Schemas:** One per business domain, plus a shared one for what every domain uses, like a `cm_`. **e.g.:** `sch_forms`, `sch_shared`
+- `tb_` → **Tables:** **e.g.:** `sch_forms.tb_affiliated`, `sch_forms.tb_affiliated_proxy`
+- `vw_` → **Views:** A stored `SELECT` behaving as a read-only table. **e.g.:** `vw_ongs_active`
+- `vwm_` → **Materialized Views:** Views stored on disk, refreshed on command. **e.g.:** `vwm_campaign_performance`
+- `dm_` → **Domains:** Reusable formats. **e.g.:** `sch_shared.dm_cnpj`, `sch_shared.dm_email`
+- `tp_` → **Types:** Enumerations. **e.g.:** `sch_forms.tp_event_format`, `sch_forms.tp_api_cnpj`
+- `fn_` → **Functions:** Routines returning a value, including trigger bodies. **e.g.:** `fn_set_updated_at`
+- `trg_` → **Triggers:** Fired by an insert, update or delete; they hold no logic and execute an `fn_`. **e.g.:** `trg_affiliated_set_updated`
+- `pol_` → **Policies:** Row-level security rules. **e.g.:** `pol_affiliated_select_auth`
+- `ix_<TableInitials>_<columns or scope>` → **Indexes:** The table's initials, then its columns as named (functions dropped), or a short scope when the columns are too many. **e.g.:** `ix_zwca_fkdoctoken_clogat`, `ix_n_cmail`, `ix_zwca_latest`
+- `gr_` → **Group Roles:** No login; they hold the permissions. **e.g.:** `gr_newsletters`, `gr_backups`
+- `usr_` → **Login Roles:** One per application or person; they join groups. **e.g.:** `usr_n8n_main`, `usr_febraca_owner`
 
 ### 🔹Columns
 
-* `fk_[TableInitials]` → **Foreign Key:** Universal prefix, underscore and caps intact. **e.g.:** `fk_ocOngID`, `fk_tnCampaignID`
+- `c` → **Columns:** `c` joined to the name, with no `_`, so a column never clashes with a Postgres function or keyword. Columns with their own prefix (`fk_`, `aux_`) don't take it. **e.g.:** `ccnpj`, `clegal_name`, `ccreated_at`
+- `cpk` → **Surrogate Primary Key:** Time-ordered UUID. **e.g.:** `cpk uuid PRIMARY KEY DEFAULT uuidv7()`
+- `fk_` → **Foreign Keys:** The referenced table without `tb_`, or the external system's ID. **e.g.:** `fk_affiliated`, `fk_zapsigndoc`
+- `aux_` → **Temporary Columns:** **e.g.:** `aux_good_cnpj`
 
-* Normal columns are plain lower cases with prefixed with `c`. **e.g.:** `Name`, `CNPJ`, `IsActive` 
-  
-  ### 🔹Queries
+### 🔹Queries
 
-* `[TableInitials]` → **Alias:** The initials declared per statement. **e.g.:** `from "tbOngs" as o`, `from "tbLocalContacts as lc`
+- `<TableInitials>` → **Alias:** The table's initials, declared per statement. **e.g.:** `from sch_forms.tb_affiliated_proxy as ap`
+- `v` → **CTE:** Named intermediate result; the SQL `LET`. **e.g.:** `with vopened as (...)`
 
-* `v` → **CTE:** Named intermediate result; the SQL `LET`. Statement-local, so unquoted. **e.g.:** `with vOpened as (...)`
+---
+
+## JavaScript & Browser
+
+**From Default:** `v`, `s`, `c`, `ar`, `dt`, `fn`, `vs`, `bt`, `bv`, `fm`, `cl`
+
+### 🔹Casing
+
+- **Files and objects:** Lower case after the prefix; a `cm_` or `sys_` file exposes one global object with the same name. **e.g.:** `cm_forms.js` → `cm_forms.vsRenderMessage`; `sys_config.js` → `sys_config.dtPages`
+
+### 🔹Markup
+
+- `<fieldId>-<role>` → **Satellites:** Elements serving one field take its id, a hyphen and their role. **e.g.:** `fmCNPJ-hint`, `fmCNPJ-message`
+- `data-<key>` → **Declarations & State:** Attributes in kebab-case; a state value is the same word the code and the payload use. **e.g.:** `data-page="cadastro-afiliado"`, `data-state="already_registered"`
+
+---
+
+## CSS
+
+**Classes say what a thing is; custom properties say where a value comes from.**
+
+### 🔹Classes
+
+- `block__element--modifier` → **BEM:** Lower case, English. **e.g.:** `.field__message--error`, `.choice--required`
+
+### 🔹Custom Properties
+
+- `--brand-*` → **Brand:** The declared palette, verbatim, never derived. **e.g.:** `--brand-navy`
+- `--sem-*` → **Meaning:** Semantic colour and its background. **e.g.:** `--sem-error`, `--sem-error-bg`
+- `--ui-*` → **Interface:** Neutrals and surfaces that are not brand colour. **e.g.:** `--ui-border`, `--ui-text-muted`
+- `--fs-*`, `--sp-*` → **Scales:** Type sizes in hundreds, spacing in steps. **e.g.:** `--fs-300`, `--sp-4`
+
+
