@@ -1,7 +1,5 @@
 # 🏗️ Architecture Principles
 
-Oct 22, 2026 · @Gabriel
-
 **Strategies for building robust, scalable, and maintainable systems within low-code environments.**
 
 > "Complexity is the enemy of execution. This architecture decouples Logic, Data, and Interface, providing a universal pattern for building maintainable, scalable systems across spreadsheets, applications, databases, and automated workflows."
@@ -10,7 +8,7 @@ Oct 22, 2026 · @Gabriel
 
 ## Visualizing the Module Hierarchy
 
-Example: a web project. In a VBA project, the same layers are `vb_` sheet modules, `wf_` and `cm_` modules, and the `sys_` core.
+Example: a web project. In a VBA project, the same layers are `vb` sheet modules, `wf_` and `cm_` modules, and the `sys_` core.
 
 ```
 /General_Project_Structure
@@ -47,7 +45,7 @@ Example: a web project. In a VBA project, the same layers are `vb_` sheet module
 
 ## The Separation of Concerns (The "MVC" Adaptation)
 
-In many projects, logic is often buried inside Button Clicks or Worksheet Events leading to unmaintainable "Spaghetti code" and duplicated logic. This framework enforces a strict separation between the **User Interface**, the **Business Logic**, and the **Data Layer**. A **client** is anything the project serves on its own: a sheet, a page, a form, a report, an integration. Every client goes through a Controller (`wf_`), and the Controller picks and sets the Services (`cm_`) that build the result. Whatever is needed twice is built once, so a new client *configures* existing code instead of rewriting it. The principle has a limit: a client with needs of its ow    n gets its own `wf_ / cm_`, called only by that client.
+In many projects, logic is often buried inside Button Clicks or Worksheet Events leading to unmaintainable "Spaghetti code" and duplicated logic. This framework enforces a strict separation between the **User Interface**, the **Business Logic**, and the **Data Layer**. A **client** is anything the project serves on its own: a sheet, a page, a form, a report, an integration. Every client goes through a Controller (`wf_`), and the Controller picks the Services (`cm_`) that build the result. Whatever is needed twice is built once, so a new client *configures* existing code instead of rewriting it. The principle has a limit: a client with needs of its own gets its own `wf_ / cm_`, called only by that client.
 
 ### 🔹 The View (Interface - the client)
 
@@ -60,7 +58,7 @@ In many projects, logic is often buried inside Button Clicks or Worksheet Events
 - **Module:** `WorksheetFunctions (wf_)`
 - **Purpose:** Handles operations specific to a client's workflow. Acts as the traffic controller—validating inputs from the interface and invoking the necessary services.
 - **Naming:** Functions mirror the client's purpose. **e.g.:** `wf_ValidateDashboardInputs`
-- **Rule:** The controller chooses; the service builds. It picks which outcome to show and in which words, and never assembles a component a service already renders. **e.g.:** `wf_Forms` picks the outcome; `cm_Forms.vsRenderCallout` draws the box.
+- **Rule:** The controller chooses; the service builds. It picks which outcome to show and in which words, and never assembles a component a service already renders. **e.g.:** `wf_`afiliado`` picks the outcome; `cm_``f``orms.vsRenderCallout` draws the box.
 
 ### 🔹 The Model/Service (Business Logic)
 
@@ -84,8 +82,8 @@ In many projects, logic is often buried inside Button Clicks or Worksheet Events
 Principles from *Object Calisthenics* are applied to enforce code hygiene and readability:
 
 1. **One Level of Indentation per Method:** Deeply nested `If/Loop` structures are refactored into smaller, distinct helper functions.
-2. **No "Magic Values":** Hardcoded values are prohibited. Numbers, strings, limits, timeouts, sizes, e-mail addresses, URLs, file paths, and similar configuration data must be defined in sys\_ and referenced through named constants. (**e.g.:** `sys_Config.cRequestTimeoutMs`, `sys_Config.cMaxPdfBytes`, `sys_Config.cContactEmail`, `sys_Config.cSupportUrl`).
-3. **Explicit Declaration:** Each client names its own configuration instead of having it inferred from a file path or position. **e.g.:**  In the page:`<html data-page="cadastro-afiliado">` in the sys\_  `sys_Config.dtPages = { 'cadastro-afiliado': { cDevMode: false } }`
+2. **No "Magic Values":** Hardcoded values are prohibited. Numbers, strings, limits, timeouts, sizes, e-mail addresses, URLs, file paths, and similar configuration data must be defined in sys\_ and referenced through named constants. (**e.g.:** `sys_config.cRequestTimeoutMs`, `sys_config.cMaxPDFBytes`, `sys_config.cContactEmail`, `sys_config.cSupportURL`).
+3. **Explicit Declaration:** Each client names its own configuration instead of having it inferred from a file path or position. **e.g.:**  In the page:`<html data-page="cadastro-afiliado">` in the sys\_  `sys_config.dtPages = { 'cadastro-afiliado': { cDevMode: false } }`
 4. **Self-Documenting Code:** Variable names must be descriptive (`vRowCount` vs `r`). A comment is added only where the code cannot say it, and then it gives the reason in a line or two.
 5. **Lists over Booleans:** Membership is expressed as a list, so changing it means adding or removing a name rather than flipping flags. **e.g.:** `arRequiredFields`, `vAcceptsFiles`
 6. **Label vs. Value:** The text a person reads can be rewritten at any time; the value that is stored is the contract. Stored values are canonical (digits only, no masks); formatting belongs to the interface. **e.g.:** the page shows *Não tenho preferência* and stores `sem_preferencia`.
@@ -144,11 +142,11 @@ Every form must work for someone who can't see the screen. A screen reader only 
 
 ### 🔹 The Rules
 
-- **Say it, don't only show it:** Every outcome that appears on screen is also announced. **e.g.:** after submit, `cm_Forms.vsAnnounce('Inscrição enviada.', true)`
+- **Say it, don't only show it:** Every outcome that appears on screen is also announced. **e.g.:** after submit, `cm_forms.vsAnnounce('Inscrição enviada.', true)`
 - **Live regions are a page fixture:** Every page carries `#live-region-polite` and `#live-region-assertive`, hidden from sight. Polite waits its turn; assertive interrupts, so it is kept for answers to something the person just did.
 - **Messages belong to their field:** Each input has a `<id>-message` satellite, linked through `aria-describedby`, so the reader speaks the error together with the field.
 - **Never colour or icon alone:** State is carried in words and in `aria-invalid`. Icons repeat the text and are marked `aria-hidden`.
-- **Take them to the problem:** On a failed submit, focus moves to the first invalid field. **e.g.:** `cm_Forms.vsFocusFirstInvalid(arInputs)`
+- **Take them to the problem:** On a failed submit, focus moves to the first invalid field. **e.g.:** `cm_forms.vsFocusFirstInvalid(arInputs)`
 
 ---
 
@@ -193,6 +191,4 @@ A task to be done or something to be revised lives in the code, as a marker in t
 
 - **One Home:** When the work spans files, the full text sits where the fix happens; the other spots say ` see TODO in <file>: <Key>  `.
 - **Completed Tasks:** They are deleted with the exception of the checks. Learnings are saved on the docs following *where things live*.
-- **Checkboxes Stay in Markdown:** `- [.]` and `- [x]` belong to Markdown checklists (release notes, pull requests), never to code. `CHECK` is the one exception, since its box records whether the gate is set.
-
-
+- **Checkboxes Stay in Markdown:** `- [ ]` and `- [x]` belong to Markdown checklists (release notes, pull requests), never to code. `CHECK` is the one exception, since its box records whether the gate is set.

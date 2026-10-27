@@ -1,7 +1,5 @@
 # 📏 Naming Conventions & Patterns
 
-Oct 22, 2026 · @Gabriel
-
 This repository defines a strict **Notation** tailored for multi-language projects. This ensures that any variable's scope and type are instantly recognizable without navigating to its definition. It also allows fast CTRL-F across multi-language projects.
 
 **Complementary:** `Architecture_Principles.md` defines where code lives, the layers that `wf_`, `cm_` and `sys_` point to.
@@ -196,5 +194,3 @@ Where a language gives a token a local meaning, the local one wins inside that l
 - `--sem-*` → **Meaning:** Semantic colour and its background. **e.g.:** `--sem-error`, `--sem-error-bg`
 - `--ui-*` → **Interface:** Neutrals and surfaces that are not brand colour. **e.g.:** `--ui-border`, `--ui-text-muted`
 - `--fs-*`, `--sp-*` → **Scales:** Type sizes in hundreds, spacing in steps. **e.g.:** `--fs-300`, `--sp-4`
-
-
