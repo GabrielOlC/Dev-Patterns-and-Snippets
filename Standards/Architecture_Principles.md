@@ -16,6 +16,7 @@ Example: a web project. In a VBA project, the same layers are `vb` sheet modules
 ├── /docs                            # Knowledge that outlives the code
 │   ├── /clients/<client>.md         # Manual — one client's current state
 │   ├── design-decisions.md          # Global decisions
+│   ├── legacy.md                    # Legacy register — what doesn't follow the standards, and why
 │   └── service-catalog.md           # One line per service
 │
 ├── /public                          # Served as-is (what the user sees)
@@ -161,6 +162,7 @@ Each document has one job, and each fact has one home. A fact written in two pla
 - `README.md` → **Structure:** What the project is, its layout, how to run it, how to publish it and how to add a client. Nothing about one client.
 - `docs/service-catalog.md` → **Catalog:** One entry per service the project uses: a short summary of what it does. The full documentation lives in the service's own header, never here. **e.g.:** `cm_Validators` — validates CNPJ numbers, including the new alphanumeric format.
 - `docs/design-decisions.md` → **Global Decisions:** What holds for every client of this project, and why (business logic).
+- `docs/legacy.md` → **Legacy Register:** What doesn't follow the current standards or versions, by scope or file: what diverges, its priority (as in *Comments*), the decision taken, and why.
 - `docs/clients/<client>.md` → **Manual:** One client's current state, including the decisions that are its alone.
 - `<client folder>/README.md` → **Placard:** Optional, used where a client has a folder of its own. It names the client and links to its manual. **Why:** client folders usually sit in `./public`, which is published, so the manual is kept in `docs/`.
 - **The code comments** → **Pending Work:** What is missing or wrong, as markers where the fix happens. (see *Comments (Pending Work)*)
