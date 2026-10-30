@@ -77,3 +77,39 @@ Returns `TRUE` when a text contains only letters (A–Z, a–z) and digits (0–
 ### [ASCII Validator](.Snippets/Excel/Text%20Entries%20Validator.md)
 
 Returns `TRUE` when every character of a text is standard ASCII (codes 0–127), with a toggle to allow empty strings.
+
+---
+
+## JavaScript
+
+### [cm_address](.Snippets/JavaScript/cm_address.js)
+
+Looks up an address from a Brazilian CEP through a chain of public providers (AwesomeAPI, then ViaCEP), each with its own timeout, and always answers in the same shape whichever provider replied.
+
+### [cm_countdown](.Snippets/JavaScript/cm_countdown.js)
+
+Draws a countdown clock (boxed days, hours, minutes and seconds, a label, a caption and a sentence for screen readers) with its styles inside the file and every colour overridable through a custom property; `cm_schedule` or any other ticker drives it.
+
+### [cm_localities](.Snippets/JavaScript/cm_localities.js)
+
+Lists Brazil's 27 UFs and, loaded per UF on demand, their 5,571 IBGE municipalities, turning what a person typed into the official spelling; its data files are written by `cm_municipalities` (Python).
+
+### [cm_masks](.Snippets/JavaScript/cm_masks.js)
+
+Formats inputs as they are typed (CNPJ including the alphanumeric one, CPF, CEP, Brazilian phone, whole reais) and keeps the caret where the person expects it, even when editing in the middle of the value.
+
+### [cm_schedule](.Snippets/JavaScript/cm_schedule.js)
+
+Tells whether a form is open from an optional opening and closing moment, describes the window in a sentence, and runs a countdown to the next moment, with replaceable Portuguese wording.
+
+### [cm_validators](.Snippets/JavaScript/cm_validators.js)
+
+Validates CNPJ (including the alphanumeric format, per SERPRO), CPF, RG, Brazilian phone, e-mail, date of birth, whole numbers, website, Instagram handle and uploaded files, returning a verdict, or a reason when one helps the message.
+
+---
+
+## Python
+
+### [cm_municipalities](.Snippets/Python/cm_municipalities.py)
+
+Fetches Brazil's 27 UFs and every municipality of each from the IBGE API, checked before anything is returned; run directly, it writes the per-UF data files `cm_localities` loads. Standard library only.
