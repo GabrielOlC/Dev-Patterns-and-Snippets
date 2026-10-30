@@ -22,7 +22,7 @@ Use the language's own comment syntax (`/* */` in M and JS, `'` in VBA, and so o
        - Original Concept: Where it came from (author, link, license — ideally linked)
        - Changes: What differs from the original (if applicable)
 
-    Version: The date the code part of the service was created or last updated (ddmmyy)
+    Version: The date the code part of the service was created or last updated (YYMMDD)
    ------------------------------------------------------------------------- */
 
 <> Paste the code here <>
