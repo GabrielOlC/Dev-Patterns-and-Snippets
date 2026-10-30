@@ -21,6 +21,8 @@ Use the language's own comment syntax (`/* */` in M and JS, `'` in VBA, and so o
    Attribution:
        - Original Concept: Where it came from (author, link, license — ideally linked)
        - Changes: What differs from the original (if applicable)
+
+    Version: The date the code part of the service was created or last updated (ddmmyy)
    ------------------------------------------------------------------------- */
 
 <> Paste the code here <>
@@ -65,6 +67,8 @@ Use the language's own comment syntax (`/* */` in M and JS, `'` in VBA, and so o
        - 2 | "byLen<": replaces the whole cell when its length is below FindVal
        - 3 | "byContains": replaces the whole cell when it contains FindVal
    Notes: Selected columns are lowered and trimmed; empty cells become null.
+
+   Version: 20261030
    ------------------------------------------------------------------------- */
 
 <> function code <>
